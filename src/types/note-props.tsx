@@ -1,8 +1,8 @@
 type NoteProps = {
 
-    id : String,
-    title : String,
-    content : String
+    id : string,
+    title : string,
+    content : string
 }
 
 export default NoteProps;
