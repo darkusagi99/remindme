@@ -6,8 +6,7 @@ import '../App.css';
 export default function Logout () {
     return (
         <div> { /* logoff DIV */ }
-            <div className="d-flex justify-content-end align-items-center grid gap-2 px-2">
-                <small>{}</small>
+            <div className="p-2 bd-highlight">
                 <button type="button" className="btn btn-default btn-xs active" onClick={() => auth.signOut()}>Sign out</button>
             </div>
         </div>
