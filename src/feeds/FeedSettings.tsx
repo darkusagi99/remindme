@@ -9,11 +9,11 @@ import {format} from "date-fns";
 /** Component for NoteList - v9 version */
 export default  function FeedSettings() {
 
-    const [feedList , setFeedList] = useState<FeedProps[]>([]);
+    const [settingList , setSettingList] = useState<FeedProps[]>([]);
 
     async function refreshSettings() {
         const newNoteList = await findAllSettings().then();
-        setFeedList(newNoteList);
+        setSettingList(newNoteList);
         return;
     }
 
@@ -52,7 +52,7 @@ export default  function FeedSettings() {
 
             <div className="px-5 d-flex flex-column justify-content-center gap-3 mt-5"> { /* List element DIV */}
                 {
-                    feedList.map(currentSetting => (
+                    settingList.map(currentSetting => (
                             <div className="card" key={currentSetting.id}>
                                 <div className="card-body">
                                     <h5 className="card-title">{currentSetting.url}</h5>

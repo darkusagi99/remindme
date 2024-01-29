@@ -19,10 +19,10 @@ export const findAllSettings = async () => {
     return res
 }
 
-export const addSetting = async (newNote : FeedProps) => {
+export const addSetting = async (newSetting : FeedProps) => {
 
     const defaultDate = new Date("1900-01-01");
-    const docRef = await addDoc(collection(db, collection_name), {url: newNote.url, lastUpdate: defaultDate});
+    const docRef = await addDoc(collection(db, collection_name), {url: newSetting.url, lastUpdate: defaultDate});
     return;
 }
 

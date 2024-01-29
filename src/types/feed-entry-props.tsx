@@ -1,9 +1,9 @@
 type FeedEntryProps = {
-    id : String,
-    title : String,
+    id : string,
+    title : string,
     publicationDate : Date,
-    description : String,
-    imageLink : String
+    description : string,
+    imageLink : string
     //imageFile :
 }
 
