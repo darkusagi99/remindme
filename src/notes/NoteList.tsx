@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import '../App.css';
 import NavBar from "../common/NavBar";
-import {findAllNotes} from "../services/NoteServices";
+import {addNote, deleteNote, findAllNotes} from "../services/NoteServices";
 import NoteProps from '../types/note-props';
 
 /** Component for NoteList - v9 version */
@@ -15,8 +15,6 @@ export default  function NoteList() {
 
     async function refreshNotes() {
         const newNoteList = await findAllNotes().then();
-        console.log("refresh Notes");
-        console.log(newNoteList);
         setNoteList(newNoteList);
         return;
     }
@@ -25,13 +23,25 @@ export default  function NoteList() {
         refreshNotes();
     }, [])
 
+    function addNoteLocal() {
+        addNote({id: "", title: "Added", content: "AddedContent"});
+        refreshNotes();
+        return;
+    }
+
+    function deleteNoteAndRefresh(noteToDelete: NoteProps) {
+        deleteNote(noteToDelete);
+        refreshNotes();
+        return;
+    }
+
     /** Component display */
         return (
             <div>
                 <NavBar/>
 
                 <div className="d-flex flex-row-reverse bd-highlight p-1">
-                    <button type="button" className="btn btn btn-outline-primary">
+                    <button type="button" className="btn btn btn-outline-primary" onClick={() => addNoteLocal()}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                              className="bi bi-plus-circle" viewBox="0 0 16 16">
                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
@@ -52,7 +62,7 @@ export default  function NoteList() {
                                     <div className="card-footer">
                                         <div className="d-flex  bd-highlight">
                                             <div className="me-auto p-2">
-                                                <button type="button" className="btn btn btn-outline-danger">
+                                                <button type="button" className="btn btn btn-outline-danger" onClick={() => deleteNoteAndRefresh(currentNote)}>
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                          fill="currentColor" className="bi bi-trash" viewBox="0 0 16 16">
                                                         <path

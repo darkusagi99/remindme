@@ -1,6 +1,6 @@
 type FeedProps = {
-    id : String,
-    url : String,
+    id : string,
+    url : string,
     lastUpdate : Date
 }
 
