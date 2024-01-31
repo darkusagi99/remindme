@@ -1,7 +1,4 @@
-import React, {Component, useEffect, useState} from 'react'
-import { auth, db } from '../services/firebase';
-import { ref, push, set, onValue, remove } from "firebase/database";
-import { Link } from 'react-router-dom';
+import React, {useEffect, useState} from 'react'
 
 import '../App.css';
 import NavBar from "../common/NavBar";
@@ -15,6 +12,10 @@ export default  function NoteList() {
 
     const [noteList , setNoteList] = useState<NoteProps[]>([]);
     const [show, setShow] = useState(false);
+    const [newNote, setNewNote] = useState<NoteProps>({id:"", content:"", title:""});
+
+    const handleTitleChange = (event: { target: { value: React.SetStateAction<string>; }; }) =>  {newNote.title = event.target.value.toString()}
+    const handleNoteChange = (event: { target: { value: React.SetStateAction<string>; }; }) =>  {newNote.content = event.target.value.toString()}
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -30,9 +31,10 @@ export default  function NoteList() {
     }, [])
 
     function saveNewNote() {
-        addNote({id: "", title: "Added", content: "AddedContent"});
+        addNote(newNote);
         refreshNotes();
         setShow(false);
+        setNewNote({id:"", content:"", title:""})
         return;
     }
 
@@ -111,11 +113,11 @@ export default  function NoteList() {
                             <form>
                                 <div className="mb-3">
                                     <label htmlFor="Titre" className="col-form-label">Titre :</label>
-                                    <input type="text" className="form-control" id="newTitle"/>
+                                    <input type="text" className="form-control" id="newTitle" onChange={handleTitleChange}/>
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="message-text" className="col-form-label">Contenu :</label>
-                                    <textarea className="form-control" id="newContent"></textarea>
+                                    <textarea className="form-control" id="newContent" onChange={handleNoteChange}></textarea>
                                 </div>
                             </form>
                         </Modal.Body>

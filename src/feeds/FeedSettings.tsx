@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import '../App.css';
 import NavBar from "../common/NavBar";
@@ -13,9 +13,12 @@ export default  function FeedSettings() {
 
     const [settingList , setSettingList] = useState<FeedProps[]>([]);
     const [show, setShow] = useState(false);
+    const [newFeedUrl, setNewFeedUrl] = useState("");
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const handleUrlChange = (event: { target: { value: React.SetStateAction<string>; }; }) =>  {setNewFeedUrl(event.target.value);}
 
     async function refreshSettings() {
         const newNoteList = await findAllSettings().then();
@@ -29,9 +32,10 @@ export default  function FeedSettings() {
 
     function addNewSetting() {
         const defaultDate = new Date("1900-01-01");
-        addSetting({id: "", url: "new URL", lastUpdate : defaultDate});
+        addSetting({id: "", url: newFeedUrl, lastUpdate : defaultDate});
         refreshSettings();
         setShow(false);
+        setNewFeedUrl("");
         return;
     }
 
@@ -100,7 +104,7 @@ export default  function FeedSettings() {
                         <form>
                             <div className="mb-3">
                                 <label htmlFor="URL" className="col-form-label">Feed URL :</label>
-                                <input type="text" className="form-control" id="newFeedUrl"/>
+                                <input type="text" className="form-control" id="newFeedUrl" onChange={handleUrlChange}/>
                             </div>
                         </form>
                     </Modal.Body>
