@@ -11,12 +11,10 @@ export const findAllEntries = async () => {
     const res: FeedEntryProps[] = []
 
     doc_refs.forEach(currEntry => {
-        res.push({id : currEntry.id, title : currEntry.data().title, publicationDate : currEntry.data().publicationDate, description : currEntry.data().description, imageLink : currEntry.data().imageLink });
+        res.push({id : currEntry.id, url : currEntry.data().url, title : currEntry.data().title, publicationDate : currEntry.data().publicationDate, description : currEntry.data().description, imageLink : currEntry.data().imageLink });
     })
 
-    console.log(res);
-
-    return res
+    return res;
 }
 
 export const addEntry = async (newNote : FeedEntryProps) => {

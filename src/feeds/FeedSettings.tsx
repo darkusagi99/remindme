@@ -7,12 +7,15 @@ import {addSetting, deleteSetting, findAllSettings} from "../services/FeedSettin
 import {format} from "date-fns";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import InfoToast from "../common/InfoToast";
 
 /** Component for NoteList - v9 version */
-export default  function FeedSettings() {
+export default function FeedSettings() {
 
     const [settingList , setSettingList] = useState<FeedProps[]>([]);
     const [show, setShow] = useState(false);
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState("");
     const [newFeedUrl, setNewFeedUrl] = useState("");
 
     const handleClose = () => setShow(false);
@@ -32,7 +35,10 @@ export default  function FeedSettings() {
 
     function addNewSetting() {
         const defaultDate = new Date("1900-01-01");
-        addSetting({id: "", url: newFeedUrl, lastUpdate : defaultDate});
+        addSetting({id: "", url: newFeedUrl, lastUpdate : defaultDate}).catch(() => {
+            setToastMessage("Erreur Lors de la Creation");
+            setShowToast(true);
+        });;
         refreshSettings();
         setShow(false);
         setNewFeedUrl("");
@@ -40,7 +46,10 @@ export default  function FeedSettings() {
     }
 
     function deleteSettingAndRefresh(settingToDelete: FeedProps) {
-        deleteSetting(settingToDelete);
+        deleteSetting(settingToDelete).catch(() => {
+            setToastMessage("Erreur Lors de la suppression");
+            setShowToast(true);
+        });
         refreshSettings();
         return;
     }
@@ -118,6 +127,10 @@ export default  function FeedSettings() {
                     </Modal.Footer>
                 </Modal>
             </>
+
+            {/* Info Toast */}
+            {InfoToast(toastMessage, showToast, setShowToast)}
+
 
         </div>
     )

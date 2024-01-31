@@ -1,5 +1,6 @@
 type FeedEntryProps = {
     id : string,
+    url : string
     title : string,
     publicationDate : Date,
     description : string,
