@@ -40,9 +40,8 @@ export default  function FeedList() {
         return;
     }
 
-    function openInBrowser(settingToDelete: FeedEntryProps) {
-        //deleteSetting(settingToDelete);
-        refreshSettings();
+    function openInBrowser(currentFeedEntry: FeedEntryProps) {
+        window.open(currentFeedEntry.url, "_blank", "noreferrer")
         return;
     }
 
