@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 
 import '../App.css';
 import NavBar from "../common/NavBar";
-import {deleteEntry, findAllEntries} from "../services/FeedService";
+import {deleteEntry, findAllEntries, updateAllFeeds} from "../services/FeedService";
 import FeedEntryProps from "../types/feed-entry-props";
 import {createOrUpdateNote} from "../services/NoteServices";
 
@@ -22,9 +22,7 @@ export default  function FeedList() {
     }, [])
 
     function refreshFeedList() {
-        const defaultDate = new Date("1900-01-01");
-        //addSetting({id: "", url: "new URL", lastUpdate : defaultDate});
-        refreshSettings();
+        updateAllFeeds();
         return;
     }
 
