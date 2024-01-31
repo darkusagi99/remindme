@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Toast from 'react-bootstrap/Toast';
 import {ToastContainer} from "react-bootstrap";
+import ToastProps from "../types/toast-props";
 
-function InfoToast(toastMessage: string, displayToast: boolean, setShowToast: (value: (((prevState: boolean) => boolean) | boolean)) => void) {
+function InfoToast(toastParam : ToastProps, setToastParam : (newProps : ToastProps) => void) {
 
     return (
             <ToastContainer position="bottom-center">
-                <Toast onClose={() => setShowToast(false)} show={displayToast} delay={3000} autohide>
-                    <Toast.Body>{toastMessage}</Toast.Body>
+                <Toast onClose={() => setToastParam({toastMessage : "", showToast : false})} show={toastParam.showToast} delay={3000} autohide>
+                    <Toast.Body>{toastParam.toastMessage}</Toast.Body>
                 </Toast>
             </ToastContainer>
     );

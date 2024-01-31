@@ -9,15 +9,15 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import InfoToast from "../common/InfoToast";
 import {AddIcon, DeleteIcon} from "../common/Icons"
+import ToastProps from "../types/toast-props";
 
 /** Component for NoteList - v9 version */
 export default function FeedSettings() {
 
     const [settingList , setSettingList] = useState<FeedProps[]>([]);
     const [show, setShow] = useState(false);
-    const [showToast, setShowToast] = useState(false);
-    const [toastMessage, setToastMessage] = useState("");
     const [newFeedUrl, setNewFeedUrl] = useState("");
+    const [toastParam, setToastParam] = useState<ToastProps>({toastMessage: "", showToast: false})
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -32,13 +32,14 @@ export default function FeedSettings() {
 
     useEffect(() => {
         refreshSettings();
+        setToastParam({toastMessage: "New Toast Config", showToast: true});
     }, [])
 
     function addNewSetting() {
         const defaultDate = new Date("1900-01-01");
         addSetting({id: "", url: newFeedUrl, lastUpdate : defaultDate}).catch(() => {
-            setToastMessage("Erreur Lors de la Creation");
-            setShowToast(true);
+            //setToastMessage("Erreur Lors de la Creation");
+            //setShowToast(true);
         });
         refreshSettings();
         setShow(false);
@@ -48,8 +49,8 @@ export default function FeedSettings() {
 
     function deleteSettingAndRefresh(settingToDelete: FeedProps) {
         deleteSetting(settingToDelete).catch(() => {
-            setToastMessage("Erreur Lors de la suppression");
-            setShowToast(true);
+            //setToastMessage("Erreur Lors de la suppression");
+            //setShowToast(true);
         });
         refreshSettings();
         return;
@@ -119,7 +120,7 @@ export default function FeedSettings() {
             </>
 
             {/* Info Toast */}
-            {InfoToast(toastMessage, showToast, setShowToast)}
+            {InfoToast(toastParam, setToastParam)}
 
 
         </div>
