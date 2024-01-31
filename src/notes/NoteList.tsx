@@ -66,7 +66,7 @@ export default  function NoteList() {
                             <div className="card" key={currentNote.id}>
                             <div className="card-body">
                                         <h5 className="card-title">{currentNote.title}</h5>
-                                        <p className="card-text">{currentNote.content}</p>
+                                        <p className="card-text"><pre>{currentNote.content}</pre></p>
                                     </div>
                                     <div className="card-footer">
                                         <div className="d-flex  bd-highlight">
@@ -105,7 +105,7 @@ export default  function NoteList() {
 
                 {/* Modal for new note */}
                 <>
-                    <Modal show={show} onHide={handleClose}>
+                    <Modal show={show} onHide={handleClose} scrollable={true}>
                         <Modal.Header closeButton>
                             <Modal.Title>Nouvelle Note</Modal.Title>
                         </Modal.Header>
@@ -117,7 +117,7 @@ export default  function NoteList() {
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="message-text" className="col-form-label">Contenu :</label>
-                                    <textarea className="form-control" id="newContent" onChange={handleNoteChange}></textarea>
+                                    <textarea className="form-control" id="newContent" onChange={handleNoteChange} rows={15}></textarea>
                                 </div>
                             </form>
                         </Modal.Body>
