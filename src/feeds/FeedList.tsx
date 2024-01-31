@@ -1,8 +1,7 @@
-import React, {Component, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import '../App.css';
 import NavBar from "../common/NavBar";
-import {format} from "date-fns";
 import {findAllEntries} from "../services/FeedService";
 import FeedEntryProps from "../types/feed-entry-props";
 
@@ -63,7 +62,7 @@ export default  function FeedList() {
                 </button>
             </div>
 
-            <div className="px-5 d-flex flex-column justify-content-center gap-3 mt-5"> { /* List element DIV */}
+            <div className="d-flex flex-column justify-content-center gap-3 px-1 mt-3"> { /* List element DIV */}
                 {
                     feedList.map(currentEntry => (
                         <div className="card" key={currentEntry.id}>

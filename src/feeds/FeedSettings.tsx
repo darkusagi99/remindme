@@ -61,7 +61,7 @@ export default  function FeedSettings() {
                 </button>
             </div>
 
-            <div className="px-5 d-flex flex-column justify-content-center gap-3 mt-5"> { /* List element DIV */}
+            <div className="d-flex flex-column justify-content-center gap-3 px-1 mt-3"> { /* List element DIV */}
                 {
                     settingList.map(currentSetting => (
                             <div className="card" key={currentSetting.id}>

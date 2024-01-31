@@ -60,7 +60,7 @@ export default  function NoteList() {
                     </button>
                 </div>
 
-                <div className="px-5 d-flex flex-column justify-content-center gap-3 mt-5"> { /* List element DIV */}
+                <div className="d-flex flex-column justify-content-center gap-3 px-1 mt-3"> { /* List element DIV */}
                     {
                         noteList.map(currentNote => (
                             <div className="card" key={currentNote.id}>
