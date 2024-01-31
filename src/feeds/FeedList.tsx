@@ -2,8 +2,9 @@ import React, {useEffect, useState} from 'react'
 
 import '../App.css';
 import NavBar from "../common/NavBar";
-import {findAllEntries} from "../services/FeedService";
+import {deleteEntry, findAllEntries} from "../services/FeedService";
 import FeedEntryProps from "../types/feed-entry-props";
+import {addNote} from "../services/NoteServices";
 
 /** Component for FeedList - v9 version */
 export default  function FeedList() {
@@ -28,13 +29,15 @@ export default  function FeedList() {
     }
 
     function deleteEntryAndRefresh(settingToDelete: FeedEntryProps) {
-        //deleteSetting(settingToDelete);
+        deleteEntry(settingToDelete);
         refreshSettings();
         return;
     }
 
-    function saveAsNote(settingToDelete: FeedEntryProps) {
-        //deleteSetting(settingToDelete);
+    function saveAsNote(entryToSave: FeedEntryProps) {
+        console.log("SaveAsNote");
+        addNote({id: "", title : entryToSave.title, content : entryToSave.url});
+
         refreshSettings();
         return;
     }

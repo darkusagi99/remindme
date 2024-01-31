@@ -38,7 +38,7 @@ export default function FeedSettings() {
         addSetting({id: "", url: newFeedUrl, lastUpdate : defaultDate}).catch(() => {
             setToastMessage("Erreur Lors de la Creation");
             setShowToast(true);
-        });;
+        });
         refreshSettings();
         setShow(false);
         setNewFeedUrl("");
