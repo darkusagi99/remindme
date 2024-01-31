@@ -5,11 +5,17 @@ import NavBar from "../common/NavBar";
 import FeedProps from "../types/feed-props";
 import {addSetting, deleteSetting, findAllSettings} from "../services/FeedSettingService";
 import {format} from "date-fns";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
 /** Component for NoteList - v9 version */
 export default  function FeedSettings() {
 
     const [settingList , setSettingList] = useState<FeedProps[]>([]);
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     async function refreshSettings() {
         const newNoteList = await findAllSettings().then();
@@ -21,10 +27,11 @@ export default  function FeedSettings() {
         refreshSettings();
     }, [])
 
-    function addSettingLocal() {
+    function addNewSetting() {
         const defaultDate = new Date("1900-01-01");
         addSetting({id: "", url: "new URL", lastUpdate : defaultDate});
         refreshSettings();
+        setShow(false);
         return;
     }
 
@@ -40,7 +47,7 @@ export default  function FeedSettings() {
             <NavBar/>
 
             <div className="d-flex flex-row-reverse bd-highlight p-1">
-                <button type="button" className="btn btn btn-outline-primary" onClick={() => addSettingLocal()}>
+                <button type="button" className="btn btn btn-outline-primary" onClick={() => handleShow()}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                          className="bi bi-plus-circle" viewBox="0 0 16 16">
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
@@ -82,6 +89,32 @@ export default  function FeedSettings() {
                     )
                 }
             </div>
+
+            {/* Modal for new setting */}
+            <>
+                <Modal show={show} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Nouvel RSS</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <form>
+                            <div className="mb-3">
+                                <label htmlFor="URL" className="col-form-label">Feed URL :</label>
+                                <input type="text" className="form-control" id="newFeedUrl"/>
+                            </div>
+                        </form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Close
+                        </Button>
+                        <Button variant="primary" onClick={addNewSetting}>
+                            Save Changes
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            </>
+
         </div>
     )
 }
