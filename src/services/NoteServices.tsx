@@ -1,4 +1,4 @@
-import { getDocs, collection, addDoc, deleteDoc, doc } from "firebase/firestore";
+import { getDocs, collection, addDoc, deleteDoc, doc, setDoc } from "firebase/firestore";
 import {db} from "./firebase";
 import NoteProps from "../types/note-props";
 
@@ -17,15 +17,13 @@ export const findAllNotes = async () => {
     return res
 }
 
-export const addNote = async (newNote : NoteProps) => {
+export const createOrUpdateNote = async (newNote : NoteProps) => {
 
-    const docRef = await addDoc(collection(db, collection_name), {title: newNote.title, content: newNote.content});
-    return;
-}
-
-export const updateNote = async (newNote : NoteProps) => {
-
-    const docRef = await addDoc(collection(db, collection_name), newNote);
+    if(newNote.id === "") {
+        const docRef = await addDoc(collection(db, collection_name), {title: newNote.title, content: newNote.content});
+    } else {
+        const docRef = await setDoc(doc(db, collection_name, newNote.id), {title: newNote.title, content: newNote.content});
+    }
     return;
 }
 

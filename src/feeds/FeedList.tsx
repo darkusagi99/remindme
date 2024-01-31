@@ -4,7 +4,7 @@ import '../App.css';
 import NavBar from "../common/NavBar";
 import {deleteEntry, findAllEntries} from "../services/FeedService";
 import FeedEntryProps from "../types/feed-entry-props";
-import {addNote} from "../services/NoteServices";
+import {createOrUpdateNote} from "../services/NoteServices";
 
 /** Component for FeedList - v9 version */
 export default  function FeedList() {
@@ -35,9 +35,7 @@ export default  function FeedList() {
     }
 
     function saveAsNote(entryToSave: FeedEntryProps) {
-        console.log("SaveAsNote");
-        addNote({id: "", title : entryToSave.title, content : entryToSave.url});
-
+        createOrUpdateNote({id: "", title : entryToSave.title, content : entryToSave.url});
         refreshSettings();
         return;
     }

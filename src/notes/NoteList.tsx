@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 
 import '../App.css';
 import NavBar from "../common/NavBar";
-import {addNote, deleteNote, findAllNotes} from "../services/NoteServices";
+import {createOrUpdateNote, deleteNote, findAllNotes} from "../services/NoteServices";
 import NoteProps from '../types/note-props';
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
@@ -30,8 +30,13 @@ export default  function NoteList() {
         refreshNotes();
     }, [])
 
+    function editNote(currentNote : NoteProps) {
+        setNewNote(Object.create(currentNote));
+        handleShow();
+    }
+
     function saveNewNote() {
-        addNote(newNote);
+        createOrUpdateNote(newNote);
         refreshNotes();
         setShow(false);
         setNewNote({id:"", content:"", title:""})
@@ -71,7 +76,8 @@ export default  function NoteList() {
                                     <div className="card-footer">
                                         <div className="d-flex  bd-highlight">
                                             <div className="me-auto p-2">
-                                                <button type="button" className="btn btn btn-outline-primary">
+                                                <button type="button" className="btn btn btn-outline-primary"
+                                                        onClick={() => editNote(currentNote)}>
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                          fill="currentColor" className="bi bi-pencil"
                                                          viewBox="0 0 16 16">
@@ -113,11 +119,11 @@ export default  function NoteList() {
                             <form>
                                 <div className="mb-3">
                                     <label htmlFor="Titre" className="col-form-label">Titre :</label>
-                                    <input type="text" className="form-control" id="newTitle" onChange={handleTitleChange}/>
+                                    <input type="text" className="form-control" id="newTitle" onChange={handleTitleChange} defaultValue={newNote.title}/>
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="message-text" className="col-form-label">Contenu :</label>
-                                    <textarea className="form-control" id="newContent" onChange={handleNoteChange} rows={15}></textarea>
+                                    <textarea className="form-control" id="newContent" onChange={handleNoteChange} rows={15} defaultValue={newNote.content}></textarea>
                                 </div>
                             </form>
                         </Modal.Body>
