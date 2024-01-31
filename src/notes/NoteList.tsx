@@ -8,6 +8,7 @@ import {AddIcon} from "../common/Icons";
 import CustomModal from "../common/CustomModal";
 import Note from "./Note";
 import InfoToast from "../common/InfoToast";
+import ToastProps from "../types/toast-props";
 
 /** NoteList  */
 export default  function NoteList() {
@@ -15,6 +16,7 @@ export default  function NoteList() {
     const [noteList , setNoteList] = useState<NoteProps[]>([]);
     const [showModal, setShowModal] = useState(false);
     const [newNote, setNewNote] = useState<NoteProps>({id:"", content:"", title:""});
+    const [toastParam, setToastParam] = useState<ToastProps>({toastMessage: "", showToast: false})
 
     const handleShow = () => setShowModal(true);
 
@@ -23,7 +25,7 @@ export default  function NoteList() {
     }
 
     useEffect(() => {
-        refreshNotes().catch();
+        refreshNotes().catch(() => setToastParam({toastMessage: "Refresh error", showToast: true}));
     }, [])
 
 
@@ -53,7 +55,7 @@ export default  function NoteList() {
                 {CustomModal(showModal, setShowModal, newNote, setNewNote, refreshNotes)}
 
                 {/* Info Toast */}
-                {/*InfoToast(toastMessage, showToast, setShowToast)*/}
+                {InfoToast(toastParam, setToastParam)}
 
             </div>
 
