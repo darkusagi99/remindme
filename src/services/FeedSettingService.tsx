@@ -1,33 +1,36 @@
-import { getDocs, collection, addDoc, deleteDoc, doc } from "firebase/firestore";
-import {db} from "./firebase";
+import {getDocs, collection, addDoc, deleteDoc, doc, updateDoc} from "firebase/firestore";
+import {auth, db} from "./firebase";
 import FeedProps from "../types/feed-props";
 
-const collection_name = "feed-settings"
+const collection_name = "feed-settings";
+const userCollection = "user/" + auth.currentUser?.uid + "/" + collection_name;
 
 export const findAllSettings = async () => {
-
-    const doc_refs = await getDocs(collection(db, collection_name))
-
     const res: FeedProps[] = []
+    const doc_refs = await getDocs(collection(db, userCollection))
 
     doc_refs.forEach(currEntry => {
         res.push({id : currEntry.id, url : currEntry.data().url, lastUpdate : new Date(currEntry.data().lastUpdate.seconds * 1000)});
     })
 
-    console.log(res);
-
     return res
 }
 
-export const addSetting = async (newSetting : FeedProps) => {
+export const findAllSettingsRef = async () => {
+    return getDocs(collection(db, userCollection))
+}
+
+export const addSetting = async (newUrl : string) => {
 
     const defaultDate = new Date("1900-01-01");
-    const docRef = await addDoc(collection(db, collection_name), {url: newSetting.url, lastUpdate: defaultDate});
+    await addDoc(collection(db, userCollection), {url: newUrl, lastUpdate: defaultDate});
     return;
 }
 
+export const updateLastupdateSetting = async (settingId : string, newDate : Date) => {
+    await updateDoc(doc(db, userCollection, settingId), {lastUpdate: newDate});
+}
+
 export const deleteSetting = async (feedToDelete : FeedProps) => {
-
-    const docRef = await deleteDoc(doc(db, collection_name, feedToDelete.id));
-
+    await deleteDoc(doc(db, userCollection, feedToDelete.id));
 }

@@ -13,8 +13,7 @@ export default function FeedModal(showModal: boolean, setShowModal: (value: bool
     const handleUrlChange = (event: { target: { value: React.SetStateAction<string>; }; }) =>  {setNewFeedUrl(event.target.value);}
 
     function addNewSetting() {
-        const defaultDate = new Date("1900-01-01");
-        addSetting({id: "", url: newFeedUrl, lastUpdate : defaultDate})
+        addSetting(newFeedUrl)
             .catch(() => setToastParam({toastMessage: "Creation error", showToast: true}));
         refreshSettings();
         setShowModal(false);

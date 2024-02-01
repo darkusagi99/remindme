@@ -1,13 +1,14 @@
 import { getDocs, collection, addDoc, deleteDoc, doc } from "firebase/firestore";
-import {db} from "./firebase";
+import {auth, db} from "./firebase";
 import FeedEntryProps from "../types/feed-entry-props";
+import {findAllSettingsRef} from "./FeedSettingService";
 
 const collection_name = "feed-entry";
-const collection_settings_name = "feed-settings";
+const userCollection = "user/" + auth.currentUser?.uid + "/" + collection_name;
 
 export const findAllEntries = async () => {
 
-    const doc_refs = await getDocs(collection(db, collection_name))
+    const doc_refs = await getDocs(collection(db, userCollection))
 
     const res: FeedEntryProps[] = []
 
@@ -20,19 +21,19 @@ export const findAllEntries = async () => {
 
 export const addEntry = async (newNote : FeedEntryProps) => {
     const defaultDate = new Date("1900-01-01");
-    const docRef = await addDoc(collection(db, collection_name), {title: newNote.title});
+    const docRef = await addDoc(collection(db, userCollection), {title: newNote.title});
     return;
 }
 
 export const deleteEntry = async (feedEntryToDelete : FeedEntryProps) => {
-    const docRef = await deleteDoc(doc(db, collection_name, feedEntryToDelete.id));
+    const docRef = await deleteDoc(doc(db, userCollection, feedEntryToDelete.id));
 }
 
 export const updateAllFeeds = async () => {
     // Update all Feeds function
 
     // Load all feeds
-    const doc_refs = await getDocs(collection(db, collection_settings_name));
+    const doc_refs = await findAllSettingsRef();
 
     // For each, get feed entry
     doc_refs.forEach(currEntry => {
