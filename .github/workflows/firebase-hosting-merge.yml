@@ -16,8 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: cat ./src/services/firebase.js
-      - run: echo "$FIREBASE_CONFIG"
-      - run: echo ${{ vars.FIREBASE_CONFIG }}
       - run: sed -i "s|##FIREBASE_CONFIG##|$FIREBASE_CONFIG|g" ./src/services/firebase.js
       - run: cat ./src/services/firebase.js
       - run: npm ci && npm run build
