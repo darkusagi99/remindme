@@ -2,8 +2,10 @@ import {DeleteIcon, EditIcon} from "../common/Icons";
 import React from "react";
 import NoteProps from "../types/note-props";
 import {deleteNote} from "../services/NoteServices";
+import ToastProps from "../types/toast-props";
 
-export default function Note(currentNote : NoteProps, setNewNote : (currentNote : NoteProps) => void, showModal : () => void, refreshNotes : () => void) {
+/** Display Note entry */
+export default function Note(currentNote : NoteProps, setNewNote : (currentNote : NoteProps) => void, showModal : () => void, refreshNotes : () => void, setToastParam: ((p: ToastProps) => any)) {
 
     function editNote(currentNote : NoteProps) {
         setNewNote(Object.create(currentNote));
@@ -12,7 +14,7 @@ export default function Note(currentNote : NoteProps, setNewNote : (currentNote 
 
 
     function deleteNoteAndRefresh(noteToDelete: NoteProps) {
-        deleteNote(noteToDelete).then(() => refreshNotes());
+        deleteNote(noteToDelete).then(() => refreshNotes()).catch(() => setToastParam({toastMessage: "Delete error", showToast: true}));
         return;
     }
 

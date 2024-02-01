@@ -3,8 +3,15 @@ import Button from "react-bootstrap/Button";
 import React from "react";
 import NoteProps from "../types/note-props";
 import {createOrUpdateNote} from "../services/NoteServices";
+import ToastProps from "../types/toast-props";
 
-export default function NoteModal(displayModal: boolean, setShowModal: (value: boolean) => void, modalInfo : NoteProps, setModalInfo : (value : NoteProps) => void, refreshNotes : () => void) {
+/** Modal for new / update note */
+export default function NoteModal(displayModal: boolean,
+                                  setShowModal: (value: boolean) => void,
+                                  modalInfo : NoteProps,
+                                  setModalInfo : (value : NoteProps) => void,
+                                  refreshNotes : () => void,
+                                  setToastParam: ((p: ToastProps) => any)) {
 
     const handleClose = () => setShowModal(false);
 
@@ -24,7 +31,7 @@ export default function NoteModal(displayModal: boolean, setShowModal: (value: b
     function saveNewNote() {
         console.log("Save Note");
         console.log(modalInfo);
-        createOrUpdateNote(modalInfo);
+        createOrUpdateNote(modalInfo).catch(() => setToastParam({toastMessage: "Creation error", showToast: true}));
         refreshNotes();
         setShowModal(false);
         setModalInfo({id:"", content:"", title:""})

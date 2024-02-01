@@ -5,15 +5,13 @@ import FeedProps from "../types/feed-props";
 import {deleteSetting} from "../services/FeedSettingService";
 import {format} from "date-fns";
 import {DeleteIcon} from "../common/Icons"
+import ToastProps from "../types/toast-props";
 
-/** Component for NoteList - v9 version */
-export default function Settings(currentSetting : FeedProps, refreshSettings : () => void) {
+/** Setting entry */
+export default function Settings(currentSetting : FeedProps, refreshSettings : () => void, setToastParam: ((p: ToastProps) => any)) {
 
     function deleteSettingAndRefresh(settingToDelete: FeedProps) {
-        deleteSetting(settingToDelete).catch(() => {
-            //setToastMessage("Erreur Lors de la suppression");
-            //setShowToast(true);
-        });
+        deleteSetting(settingToDelete).catch(() => setToastParam({toastMessage: "Delete error", showToast: true}));
         refreshSettings();
         return;
     }

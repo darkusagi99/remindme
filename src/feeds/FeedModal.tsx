@@ -2,8 +2,10 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import React, {useState} from "react";
 import {addSetting} from "../services/FeedSettingService";
+import ToastProps from "../types/toast-props";
 
-export default function FeedModal(showModal: boolean, setShowModal: (value: boolean) => void, refreshSettings : () => void) {
+/** Create new Field modal */
+export default function FeedModal(showModal: boolean, setShowModal: (value: boolean) => void, refreshSettings : () => void, setToastParam: ((p: ToastProps) => any)) {
 
     const [newFeedUrl, setNewFeedUrl] = useState("");
     const handleClose = () => setShowModal(false);
@@ -12,9 +14,8 @@ export default function FeedModal(showModal: boolean, setShowModal: (value: bool
 
     function addNewSetting() {
         const defaultDate = new Date("1900-01-01");
-        addSetting({id: "", url: newFeedUrl, lastUpdate : defaultDate}).catch(() => {
-
-        });
+        addSetting({id: "", url: newFeedUrl, lastUpdate : defaultDate})
+            .catch(() => setToastParam({toastMessage: "Creation error", showToast: true}));
         refreshSettings();
         setShowModal(false);
         setNewFeedUrl("");

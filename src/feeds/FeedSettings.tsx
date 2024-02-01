@@ -6,7 +6,6 @@ import FeedProps from "../types/feed-props";
 import {findAllSettings} from "../services/FeedSettingService";
 import InfoToast from "../common/InfoToast";
 import {AddIcon} from "../common/Icons"
-import ToastProps from "../types/toast-props";
 import FeedModal from "./FeedModal";
 import Settings from "./Setting";
 
@@ -43,14 +42,14 @@ export default function FeedSettings({toastParam, setToastParam} : any) {
             <div className="d-flex flex-column justify-content-center gap-3 px-1 mt-3"> { /* List element DIV */}
                 {
                     settingList.map(currentSetting => (
-                            Settings(currentSetting, refreshSettings)
+                            Settings(currentSetting, refreshSettings, setToastParam)
                         )
                     )
                 }
             </div>
 
             {/* Modal for new setting */}
-            {FeedModal(showModal, setShowModal, refreshSettings)}
+            {FeedModal(showModal, setShowModal, refreshSettings, setToastParam)}
 
             {/* Info Toast */}
             {InfoToast(toastParam, setToastParam)}

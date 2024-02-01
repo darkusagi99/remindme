@@ -7,7 +7,7 @@ import FeedEntryProps from "../types/feed-entry-props";
 import {RefreshIcon} from "../common/Icons";
 import FeedEntry from "./FeedEntry";
 
-/** Component for FeedList Screen */
+/** FeedList Screen */
 export default function FeedList({toastParam, setToastParam} : any) {
 
     const [feedList , setFeedList] = useState<FeedEntryProps[]>([]);
@@ -19,11 +19,11 @@ export default function FeedList({toastParam, setToastParam} : any) {
     }
 
     useEffect(() => {
-        refreshSettings();
+        refreshSettings().catch(() => setToastParam({toastMessage: "Refresh error", showToast: true}));
     }, [])
 
     function refreshFeedList() {
-        updateAllFeeds();
+        updateAllFeeds().catch(() => setToastParam({toastMessage: "Refresh error", showToast: true}));
         return;
     }
 
@@ -43,7 +43,7 @@ export default function FeedList({toastParam, setToastParam} : any) {
             <div className="d-flex flex-column justify-content-center gap-3 px-1 mt-3">
                 {
                     feedList.map(currentEntry => (
-                        FeedEntry(currentEntry, refreshFeedList)
+                        FeedEntry(currentEntry, refreshFeedList, setToastParam)
                         )
                     )
                 }

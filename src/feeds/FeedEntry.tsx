@@ -5,18 +5,20 @@ import {deleteEntry} from "../services/FeedService";
 import FeedEntryProps from "../types/feed-entry-props";
 import {createOrUpdateNote} from "../services/NoteServices";
 import {DeleteIcon, LinkIcon, SaveIcon} from "../common/Icons";
+import ToastProps from "../types/toast-props";
 
-/** Component for FeedList Screen */
-export default function FeedEntry(currentEntry: FeedEntryProps, refreshSettings : () => void) {
+/** Feed element entry */
+export default function FeedEntry(currentEntry: FeedEntryProps, refreshSettings : () => void, setToastParam: ((p: ToastProps) => any)) {
 
     function deleteEntryAndRefresh(settingToDelete: FeedEntryProps) {
-        deleteEntry(settingToDelete);
+        deleteEntry(settingToDelete).catch(() => setToastParam({toastMessage: "Delete error", showToast: true}));
         refreshSettings();
         return;
     }
 
     function saveAsNote(entryToSave: FeedEntryProps) {
-        createOrUpdateNote({id: "", title : entryToSave.title, content : entryToSave.url});
+        createOrUpdateNote({id: "", title : entryToSave.title, content : entryToSave.url})
+            .catch(() => setToastParam({toastMessage: "Creation error", showToast: true}));
         refreshSettings();
         return;
     }

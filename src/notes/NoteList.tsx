@@ -42,14 +42,14 @@ export default function NoteList({toastParam, setToastParam} : any) {
                 <div className="d-flex flex-column justify-content-center gap-3 px-1 mt-3"> { /* List element DIV */}
                     {
                         noteList.map(currentNote => (
-                                Note(currentNote, setNewNote, handleShow, refreshNotes)
+                                Note(currentNote, setNewNote, handleShow, refreshNotes, setToastParam)
                             )
                         )
                     }
                 </div>
 
                 {/* Modal for new note */}
-                {NoteModal(showModal, setShowModal, newNote, setNewNote, refreshNotes)}
+                {NoteModal(showModal, setShowModal, newNote, setNewNote, refreshNotes, setToastParam)}
 
             </div>
 
