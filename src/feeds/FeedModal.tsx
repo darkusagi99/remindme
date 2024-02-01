@@ -5,7 +5,7 @@ import {addSetting} from "../services/FeedSettingService";
 import ToastProps from "../types/toast-props";
 
 /** Create new Field modal */
-export default function FeedModal(showModal: boolean, setShowModal: (value: boolean) => void, refreshSettings : () => void, setToastParam: ((p: ToastProps) => any)) {
+export default function FeedModal(showModal: boolean, setShowModal: (value: boolean) => void, refreshSettings : () => void, setToastParam: ((p: ToastProps) => void)) {
 
     const [newFeedUrl, setNewFeedUrl] = useState("");
     const handleClose = () => setShowModal(false);

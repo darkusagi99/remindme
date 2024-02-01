@@ -11,7 +11,7 @@ export default function NoteModal(displayModal: boolean,
                                   modalInfo : NoteProps,
                                   setModalInfo : (value : NoteProps) => void,
                                   refreshNotes : () => void,
-                                  setToastParam: ((p: ToastProps) => any)) {
+                                  setToastParam: ((p: ToastProps) => void)) {
 
     const handleClose = () => setShowModal(false);
 

@@ -8,7 +8,7 @@ import {DeleteIcon} from "../common/Icons"
 import ToastProps from "../types/toast-props";
 
 /** Setting entry */
-export default function Settings(currentSetting : FeedProps, refreshSettings : () => void, setToastParam: ((p: ToastProps) => any)) {
+export default function Settings(currentSetting : FeedProps, refreshSettings : () => void, setToastParam: ((p: ToastProps) => void)) {
 
     function deleteSettingAndRefresh(settingToDelete: FeedProps) {
         deleteSetting(settingToDelete).catch(() => setToastParam({toastMessage: "Delete error", showToast: true}));

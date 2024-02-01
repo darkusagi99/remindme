@@ -5,7 +5,7 @@ import {deleteNote} from "../services/NoteServices";
 import ToastProps from "../types/toast-props";
 
 /** Display Note entry */
-export default function Note(currentNote : NoteProps, setNewNote : (currentNote : NoteProps) => void, showModal : () => void, refreshNotes : () => void, setToastParam: ((p: ToastProps) => any)) {
+export default function Note(currentNote : NoteProps, setNewNote : (currentNote : NoteProps) => void, showModal : () => void, refreshNotes : () => void, setToastParam: ((p: ToastProps) => void)) {
 
     function editNote(currentNote : NoteProps) {
         setNewNote(Object.create(currentNote));

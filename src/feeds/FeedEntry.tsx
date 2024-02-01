@@ -8,7 +8,7 @@ import {DeleteIcon, LinkIcon, SaveIcon} from "../common/Icons";
 import ToastProps from "../types/toast-props";
 
 /** Feed element entry */
-export default function FeedEntry(currentEntry: FeedEntryProps, refreshSettings : () => void, setToastParam: ((p: ToastProps) => any)) {
+export default function FeedEntry(currentEntry: FeedEntryProps, refreshSettings : () => void, setToastParam: ((p: ToastProps) => void)) {
 
     function deleteEntryAndRefresh(settingToDelete: FeedEntryProps) {
         deleteEntry(settingToDelete).catch(() => setToastParam({toastMessage: "Delete error", showToast: true}));
