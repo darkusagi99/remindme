@@ -6,7 +6,6 @@ const collection_name = "notes"
 
 async function getUserCollection() {
     const userUuid = auth.currentUser?.uid;
-    console.log("userUuid : " + userUuid);
     return "user/" + userUuid + "/" + collection_name;
 }
 

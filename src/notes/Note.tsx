@@ -22,9 +22,9 @@ export default function Note(currentNote : NoteProps, setNewNote : (currentNote 
         <div className="card" key={currentNote.id}>
             <div className="card-body">
                 <h5 className="card-title">{currentNote.title}</h5>
-                <p className="card-text">
-                    <pre>{currentNote.content}</pre>
-                </p>
+                <pre className="card-text">
+                    {currentNote.content}
+                </pre>
             </div>
             <div className="card-footer">
                 <div className="d-flex  bd-highlight">
