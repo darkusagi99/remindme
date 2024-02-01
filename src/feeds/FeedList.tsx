@@ -8,7 +8,7 @@ import {RefreshIcon} from "../common/Icons";
 import FeedEntry from "./FeedEntry";
 
 /** Component for FeedList Screen */
-export default function FeedList() {
+export default function FeedList({toastParam, setToastParam} : any) {
 
     const [feedList , setFeedList] = useState<FeedEntryProps[]>([]);
 

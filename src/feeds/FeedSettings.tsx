@@ -11,11 +11,10 @@ import FeedModal from "./FeedModal";
 import Settings from "./Setting";
 
 /** Component for Feedsetting sreen */
-export default function FeedSettings() {
+export default function FeedSettings({toastParam, setToastParam} : any) {
 
     const [settingList , setSettingList] = useState<FeedProps[]>([]);
     const [showModal, setShowModal] = useState(false);
-    const [toastParam, setToastParam] = useState<ToastProps>({toastMessage: "", showToast: false})
 
     const handleShow = () => setShowModal(true);
 

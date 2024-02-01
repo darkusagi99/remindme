@@ -7,21 +7,18 @@ import NoteProps from '../types/note-props';
 import {AddIcon} from "../common/Icons";
 import NoteModal from "./NoteModal";
 import Note from "./Note";
-import InfoToast from "../common/InfoToast";
-import ToastProps from "../types/toast-props";
 
 /** NoteList  */
-export default  function NoteList() {
+export default function NoteList({toastParam, setToastParam} : any) {
 
     const [noteList , setNoteList] = useState<NoteProps[]>([]);
     const [showModal, setShowModal] = useState(false);
     const [newNote, setNewNote] = useState<NoteProps>({id:"", content:"", title:""});
-    const [toastParam, setToastParam] = useState<ToastProps>({toastMessage: "", showToast: false})
 
     const handleShow = () => setShowModal(true);
 
     async function refreshNotes() {
-        setNoteList(await findAllNotes().then());
+        setNoteList(await findAllNotes());
     }
 
     useEffect(() => {
@@ -53,9 +50,6 @@ export default  function NoteList() {
 
                 {/* Modal for new note */}
                 {NoteModal(showModal, setShowModal, newNote, setNewNote, refreshNotes)}
-
-                {/* Info Toast */}
-                {InfoToast(toastParam, setToastParam)}
 
             </div>
 
