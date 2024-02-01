@@ -4,7 +4,7 @@ import React from "react";
 import NoteProps from "../types/note-props";
 import {createOrUpdateNote} from "../services/NoteServices";
 
-export default function CustomModal(displayModal: boolean, setShowModal: (value: boolean) => void, modalInfo : NoteProps, setModalInfo : (value : NoteProps) => void, refreshNotes : () => void) {
+export default function NoteModal(displayModal: boolean, setShowModal: (value: boolean) => void, modalInfo : NoteProps, setModalInfo : (value : NoteProps) => void, refreshNotes : () => void) {
 
     const handleClose = () => setShowModal(false);
 
@@ -38,16 +38,14 @@ export default function CustomModal(displayModal: boolean, setShowModal: (value:
                     <Modal.Title>Nouvelle Note</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <form>
-                        <div className="mb-3">
-                            <label htmlFor="Titre" className="col-form-label">Titre :</label>
-                            <input type="text" className="form-control" id="newTitle" defaultValue={modalInfo.title} onChange={handleChange} />
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="message-text" className="col-form-label">Contenu :</label>
-                            <textarea className="form-control" id="newContent" rows={15} defaultValue={modalInfo.content} onChange={handleChange} ></textarea>
-                        </div>
-                    </form>
+                    <div className="mb-3">
+                        <label htmlFor="Titre" className="col-form-label">Titre :</label>
+                        <input type="text" className="form-control" id="newTitle" defaultValue={modalInfo.title} onChange={handleChange} />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="message-text" className="col-form-label">Contenu :</label>
+                        <textarea className="form-control" id="newContent" rows={15} defaultValue={modalInfo.content} onChange={handleChange} ></textarea>
+                    </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>

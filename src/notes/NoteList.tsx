@@ -5,7 +5,7 @@ import NavBar from "../common/NavBar";
 import {findAllNotes} from "../services/NoteServices";
 import NoteProps from '../types/note-props';
 import {AddIcon} from "../common/Icons";
-import CustomModal from "../common/CustomModal";
+import NoteModal from "./NoteModal";
 import Note from "./Note";
 import InfoToast from "../common/InfoToast";
 import ToastProps from "../types/toast-props";
@@ -52,7 +52,7 @@ export default  function NoteList() {
                 </div>
 
                 {/* Modal for new note */}
-                {CustomModal(showModal, setShowModal, newNote, setNewNote, refreshNotes)}
+                {NoteModal(showModal, setShowModal, newNote, setNewNote, refreshNotes)}
 
                 {/* Info Toast */}
                 {InfoToast(toastParam, setToastParam)}
