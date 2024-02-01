@@ -26,14 +26,14 @@ export const findAllEntries = async () => {
 
 export const addEntry = async (newNote : FeedEntryProps) => {
     const userCollection = await getUserCollection();
-    const defaultDate = new Date("1900-01-01");
-    const docRef = await addDoc(collection(db, userCollection), {title: newNote.title});
+    //const defaultDate = new Date("1900-01-01");
+    await addDoc(collection(db, userCollection), {title: newNote.title});
     return;
 }
 
 export const deleteEntry = async (feedEntryToDelete : FeedEntryProps) => {
     const userCollection = await getUserCollection();
-    const docRef = await deleteDoc(doc(db, userCollection, feedEntryToDelete.id));
+    await deleteDoc(doc(db, userCollection, feedEntryToDelete.id));
 }
 
 export const updateAllFeeds = async () => {
@@ -46,10 +46,8 @@ export const updateAllFeeds = async () => {
     doc_refs.forEach(currEntry => {
         console.log(currEntry.data().url);
 
-        var rssData;
-
         // Get feed entry
-        fetch('/api/' + currEntry.data().url, {mode:'no-cors',
+        fetch(currEntry.data().url, {mode:'no-cors',
             headers : {
                 'Accept' :'application/xml',
                 'content-type': 'application/x-www-form-urlencoded',
@@ -59,7 +57,6 @@ export const updateAllFeeds = async () => {
             }
         })
             .then(response => console.log(response));
-        ;
             //.then(str => new window.DOMParser().parseFromString(str, "text/xml"))
             //.then(data => console.log(data));
 

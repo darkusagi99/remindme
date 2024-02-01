@@ -20,7 +20,7 @@ export default function FeedList({setToastParam} : any) {
 
     useEffect(() => {
         refreshSettings().catch(() => setToastParam({toastMessage: "Refresh error", showToast: true}));
-    }, [])
+    })
 
     function refreshFeedList() {
         updateAllFeeds().catch(() => setToastParam({toastMessage: "Refresh error", showToast: true}));

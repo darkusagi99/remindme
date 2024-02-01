@@ -23,7 +23,7 @@ export default function NoteList({setToastParam} : any) {
 
     useEffect(() => {
         refreshNotes().catch(() => setToastParam({toastMessage: "Refresh error", showToast: true}));
-    }, [])
+    })
 
 
     /** Component display */

@@ -22,7 +22,7 @@ export default function FeedSettings({setToastParam} : any) {
 
     useEffect(() => {
         refreshSettings().catch(() => setToastParam({toastMessage: "Erreur lors du chargement", showToast: true}));
-    }, [])
+    })
 
 
     /** Component display */

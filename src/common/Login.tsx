@@ -9,11 +9,7 @@ export default function Login() {
     <div className="text-center">
 		<div>
 			<button className="btn btn-default btn-lg active" onClick={() => {
-				  signInWithPopup(auth, provider).then((result) => {
-					// The signed-in user info.
-					const user = result.user;
-				  });
-
+				  signInWithPopup(auth, provider).then(() => {});
 				}}>
 			<i className="fab fa-google">
 			</i>Sign in with google</button>
