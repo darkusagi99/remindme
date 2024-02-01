@@ -15,10 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: cat ./.github/workflows/firebase-hosting-merge.yml
+      - run: cat ./src/services/firebase.js
       - run: echo $FIREBASE_CONF
-      - run: sed -i 's\##FIREBASE_CONFIG##\$FIREBASE_CONF\g' ./.github/workflows/firebase-hosting-merge.yml
-      - run: cat ./.github/workflows/firebase-hosting-merge.yml
+      - run: sed -i 's\##FIREBASE_CONFIG##\$FIREBASE_CONF\g' ./src/services/firebase.js
+      - run: cat ./src/services/firebase.js
       - run: npm ci && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
