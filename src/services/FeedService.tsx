@@ -7,7 +7,6 @@ const collection_name = "feed-entry";
 
 async function getUserCollection() {
     const userUuid = auth.currentUser?.uid;
-    console.log("userUuid : " + userUuid);
     return "user/" + userUuid + "/" + collection_name;
 }
 export const findAllEntries = async () => {

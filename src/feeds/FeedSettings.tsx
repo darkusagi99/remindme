@@ -22,7 +22,8 @@ export default function FeedSettings({setToastParam} : any) {
 
     useEffect(() => {
         refreshSettings().catch(() => setToastParam({toastMessage: "Erreur lors du chargement", showToast: true}));
-    })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
 
     /** Component display */

@@ -20,7 +20,8 @@ export default function FeedList({setToastParam} : any) {
 
     useEffect(() => {
         refreshSettings().catch(() => setToastParam({toastMessage: "Refresh error", showToast: true}));
-    })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     function refreshFeedList() {
         updateAllFeeds().catch(() => setToastParam({toastMessage: "Refresh error", showToast: true}));

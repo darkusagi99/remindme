@@ -23,7 +23,8 @@ export default function NoteList({setToastParam} : any) {
 
     useEffect(() => {
         refreshNotes().catch(() => setToastParam({toastMessage: "Refresh error", showToast: true}));
-    })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
 
     /** Component display */
