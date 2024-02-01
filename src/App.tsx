@@ -27,10 +27,10 @@ export const App = () => {
           {/* Routes */}
           <div className="app">
             <Routes>
-              <Route path="/" element={user ? <NoteList toastParam={toastParam} setToastParam={setToastParam} /> : <Login />} />
-              <Route path="/notes" element={user ? <NoteList toastParam={toastParam} setToastParam={setToastParam}  /> : <Login />} />
-              <Route path="/rss" element={user ? <FeedList toastParam={toastParam} setToastParam={setToastParam} /> : <Login />} />
-              <Route path="/settings" element={user ? <FeedSettings toastParam={toastParam} setToastParam={setToastParam} /> : <Login />} />
+              <Route path="/" element={user ? <NoteList setToastParam={setToastParam} /> : <Login />} />
+              <Route path="/notes" element={user ? <NoteList setToastParam={setToastParam}  /> : <Login />} />
+              <Route path="/rss" element={user ? <FeedList setToastParam={setToastParam} /> : <Login />} />
+              <Route path="/settings" element={user ? <FeedSettings setToastParam={setToastParam} /> : <Login />} />
             </Routes>
           </div>
           {/* Application info Toast */}

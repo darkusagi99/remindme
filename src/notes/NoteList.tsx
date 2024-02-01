@@ -9,7 +9,7 @@ import NoteModal from "./NoteModal";
 import Note from "./Note";
 
 /** NoteList  */
-export default function NoteList({toastParam, setToastParam} : any) {
+export default function NoteList({setToastParam} : any) {
 
     const [noteList , setNoteList] = useState<NoteProps[]>([]);
     const [showModal, setShowModal] = useState(false);

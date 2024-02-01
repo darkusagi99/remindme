@@ -4,13 +4,12 @@ import '../App.css';
 import NavBar from "../common/NavBar";
 import FeedProps from "../types/feed-props";
 import {findAllSettings} from "../services/FeedSettingService";
-import InfoToast from "../common/InfoToast";
 import {AddIcon} from "../common/Icons"
 import FeedModal from "./FeedModal";
 import Settings from "./Setting";
 
-/** Component for Feedsetting sreen */
-export default function FeedSettings({toastParam, setToastParam} : any) {
+/** Component for FeedSettings screen */
+export default function FeedSettings({setToastParam} : any) {
 
     const [settingList , setSettingList] = useState<FeedProps[]>([]);
     const [showModal, setShowModal] = useState(false);
@@ -50,9 +49,6 @@ export default function FeedSettings({toastParam, setToastParam} : any) {
 
             {/* Modal for new setting */}
             {FeedModal(showModal, setShowModal, refreshSettings, setToastParam)}
-
-            {/* Info Toast */}
-            {InfoToast(toastParam, setToastParam)}
 
         </div>
     )

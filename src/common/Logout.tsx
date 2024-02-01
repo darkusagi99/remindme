@@ -1,5 +1,4 @@
 import { auth } from '../services/firebase';
-import {User} from "@firebase/auth";
 
 import '../App.css';
 /** Component for Logout Window - v9 version */

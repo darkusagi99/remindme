@@ -11,7 +11,7 @@ export default function Login() {
 			<button className="btn btn-default btn-lg active" onClick={() => {
 				  signInWithPopup(auth, provider).then((result) => {
 					// The signed-in user info.
-					var user = result.user;
+					const user = result.user;
 				  });
 
 				}}>
