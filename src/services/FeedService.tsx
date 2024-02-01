@@ -4,10 +4,15 @@ import FeedEntryProps from "../types/feed-entry-props";
 import {findAllSettingsRef} from "./FeedSettingService";
 
 const collection_name = "feed-entry";
-const userCollection = "user/" + auth.currentUser?.uid + "/" + collection_name;
 
+async function getUserCollection() {
+    const userUuid = auth.currentUser?.uid;
+    console.log("userUuid : " + userUuid);
+    return "user/" + userUuid + "/" + collection_name;
+}
 export const findAllEntries = async () => {
 
+    const userCollection = await getUserCollection();
     const doc_refs = await getDocs(collection(db, userCollection))
 
     const res: FeedEntryProps[] = []
@@ -20,12 +25,14 @@ export const findAllEntries = async () => {
 }
 
 export const addEntry = async (newNote : FeedEntryProps) => {
+    const userCollection = await getUserCollection();
     const defaultDate = new Date("1900-01-01");
     const docRef = await addDoc(collection(db, userCollection), {title: newNote.title});
     return;
 }
 
 export const deleteEntry = async (feedEntryToDelete : FeedEntryProps) => {
+    const userCollection = await getUserCollection();
     const docRef = await deleteDoc(doc(db, userCollection, feedEntryToDelete.id));
 }
 
