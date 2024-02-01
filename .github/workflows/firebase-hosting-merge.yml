@@ -6,6 +6,7 @@ name: Deploy to Firebase Hosting on merge
   push:
     branches:
       - main
+  workflow_dispatch:
 env:
   FIREBASE_CONF : env.FIREBASE_CONFIG
 
