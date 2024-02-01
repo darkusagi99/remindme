@@ -5,7 +5,7 @@ import { getFirestore } from "firebase/firestore";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration - Will be replaced by Actions
-const firebaseConfig = ##FIREBASE_CONFIG##
+const firebaseConfig = { ##FIREBASE_CONFIG## };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
