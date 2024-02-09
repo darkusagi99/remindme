@@ -40,23 +40,45 @@ export const updateAllFeeds = async () => {
 
     // Load all feeds
     const doc_refs = await findAllSettingsRef();
+    const corsProxy : string = 'https://corsproxy.io/?'
+
+    //let parser = new RSSParser();
 
     // For each, get feed entry
     doc_refs.forEach(currEntry => {
-        console.log(currEntry.data().url);
 
-        // Get feed entry
-        fetch(currEntry.data().url, {mode:'no-cors',
-            headers : {
-                'Accept' :'application/xml',
-                'content-type': 'application/x-www-form-urlencoded',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'GET, POST, PUT',
-                'Access-Control-Allow-Headers': 'Content-Type',
-            }
+        let feedUrl = corsProxy + currEntry.data().url;
+
+        // Get feed entries
+        fetch(feedUrl, {mode:'cors'
         })
-            .then(response => console.log(response));
-            //.then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+            // Read body of response
+            .then(response => response.text())
+            // Transform body to XML Document object
+            .then(data => {let parser = new DOMParser()
+                    let xmlDoc = parser.parseFromString(data, 'text/xml')
+                    console.log(xmlDoc)
+                    return xmlDoc;
+            }
+            )
+            // Collect XML elements from feed
+            .then((xmlDocument) => {
+                    let returnList;
+                    let returnListStd = xmlDocument.getElementsByTagName("item");
+                    let returnListEntry = xmlDocument.getElementsByTagName("entry");
+
+                    returnList = Array.from(returnListStd);
+                    returnList.concat(Array.from(returnListEntry));
+                    return returnList;
+                }
+            )
+            // Loop on entries
+            .then((feedEntries) =>
+                feedEntries.forEach(
+                    currEntry =>
+                        createEntryFromElement(currEntry)
+                )
+            );
             //.then(data => console.log(data));
 
         // Loop inside Feed entries and create new entries
@@ -66,5 +88,41 @@ export const updateAllFeeds = async () => {
         // If field updated proprely, update last update date
 
     })
+
+}
+
+function getFirstTagContent(element : Element, tag : string) : string {
+    let tagList = element.getElementsByTagName(tag);
+    if (tagList.length > 0) {
+        if (tagList.item(0) != null) {
+            return tagList.item(0)!.innerHTML;
+        }
+    }
+    // If nothing found - return empty element
+    return "";
+}
+
+export const createEntryFromElement = (element : Element) => {
+
+        let tmpId = getFirstTagContent(element, "link");
+        let tmpUrl = getFirstTagContent(element, "link");
+        let tmpTitle = getFirstTagContent(element, "title");
+        let tmppubDate = getFirstTagContent(element, "pubDate");
+        let tmpDescription = getFirstTagContent(element, "description");
+
+        let tmpDescriptionBis = getFirstTagContent(element, "description");
+        let tmpImage = getFirstTagContent(element, "enclosure");
+
+        let feedEntry : FeedEntryProps = {
+        id : tmpId,
+        url : tmpUrl,
+        title : tmpTitle,
+        publicationDate : new Date(),
+        description : tmpDescription + tmpDescriptionBis,
+        imageLink : tmpImage
+        //imageFile :
+        }
+
+        console.log(feedEntry);
 
 }
