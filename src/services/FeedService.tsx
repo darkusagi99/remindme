@@ -2,16 +2,38 @@ import { getDocs, collection, addDoc, deleteDoc, doc } from "firebase/firestore"
 import {auth, db} from "./firebase";
 import FeedEntryProps from "../types/feed-entry-props";
 import {findAllSettingsRef, updateLastupdateSetting} from "./FeedSettingService";
+import {addInCache, removeFromCache, saveInCache} from "./CacheService";
+import NoteProps from "../types/note-props";
+import FeedProps from "../types/feed-props";
 
 
 const collection_name = "feed-entry";
+const collection_name_local = collection_name + "-";
 
 async function getUserCollection() {
     const userUuid = auth.currentUser?.uid;
     return "user/" + userUuid + "/" + collection_name;
 }
-export const findAllEntries = async () => {
 
+export const findAllEntries = async () => {
+    let res: FeedEntryProps[];
+    const localCache = loadFromCache();
+
+    // No local cache -> Check Cloud
+    if (localCache.length === 0) {
+        res = await loadFromCloud();
+        saveInCache(res, collection_name_local);
+    } else {
+        // Local cache -> serve as return.
+        res =  localCache;
+    }
+
+    return res;
+}
+
+async function loadFromCloud() {
+
+    console.log("Load from Cloud - FeedEntries");
     const userCollection = await getUserCollection();
     const doc_refs = await getDocs(collection(db, userCollection))
 
@@ -22,18 +44,51 @@ export const findAllEntries = async () => {
     })
 
     return res;
+
+}
+
+
+function loadFromCache() {
+
+
+    console.log("Load from Cache - Feedentries");
+
+    const res: FeedEntryProps[] = []
+
+    for(let i = 0; i < localStorage.length; i++) {
+        let currentKey = localStorage.key(i);
+        if (currentKey != null && currentKey.startsWith(collection_name_local)) {
+            let tmpItem = localStorage.getItem(currentKey);
+            if (tmpItem != null) {
+                res.push(JSON.parse(tmpItem));
+            }
+        }
+    }
+
+
+    console.log("Load from Cache - Feedentries -- " + res.length);
+
+    return res;
 }
 
 export const addEntry = async (newNote : FeedEntryProps) => {
     const userCollection = await getUserCollection();
-    //const defaultDate = new Date("1900-01-01");
-    await addDoc(collection(db, userCollection), newNote);
+    await addDoc(collection(db, userCollection), newNote).then(
+        (docref) => {
+            newNote.id = docref.id;
+            addInCache(collection_name_local + newNote.id, newNote);
+        }
+    );
     return;
 }
 
 export const deleteEntry = async (feedEntryToDelete : FeedEntryProps) => {
     const userCollection = await getUserCollection();
-    await deleteDoc(doc(db, userCollection, feedEntryToDelete.id));
+    await deleteDoc(doc(db, userCollection, feedEntryToDelete.id)).then(
+        () => {
+            removeFromCache(collection_name_local + feedEntryToDelete.id);
+        }
+    );
 }
 
 export const updateAllFeeds = async () => {

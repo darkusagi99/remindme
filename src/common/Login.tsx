@@ -9,6 +9,7 @@ export default function Login() {
     <div className="text-center">
 		<div>
 			<button className="btn btn-default btn-lg active" onClick={() => {
+				  localStorage.clear();
 				  signInWithPopup(auth, provider).then(() => {});
 				}}>
 			<i className="fab fa-google">
