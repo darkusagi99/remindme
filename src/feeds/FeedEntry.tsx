@@ -33,7 +33,7 @@ export default function FeedEntry(currentEntry: FeedEntryProps, refreshSettings 
         if (currentEntry.imageLink === "") {
             return "";
         } else {
-            return <img src={currentEntry.imageLink} alt={currentEntry.description}/>;
+            return <div className="RssCaptionDiv"><img src={currentEntry.imageLink} alt={currentEntry.description} className="RssCaption"/></div>;
         }
     }
 
@@ -42,13 +42,13 @@ export default function FeedEntry(currentEntry: FeedEntryProps, refreshSettings 
         <div className="card" key={currentEntry.id}>
                 <div className="card-body">
                     <h5 className="card-title">{currentEntry.title}</h5>
-                    <p className="card-text">
+                    <div className="card-text">
                         <SanitizedMarkup dirtyHtml={currentEntry.description} />
-                    </p>
+                    </div>
                     {showImage(currentEntry)}
                 </div>
                 <div className="card-footer">
-                    <div className="d-flex  bd-highlight justify-content-between">
+                    <div className="d-flex bd-highlight justify-content-between">
                         <div className="p-2">
                             <button type="button" className="btn btn btn-outline-primary"
                                     onClick={() => openInBrowser(currentEntry)}>
