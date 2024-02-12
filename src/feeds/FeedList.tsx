@@ -12,14 +12,14 @@ export default function FeedList({setToastParam} : any) {
 
     const [feedList , setFeedList] = useState<FeedEntryProps[]>([]);
 
-    async function refreshSettings() {
+    async function refreshFeeds() {
         const entriesList = await findAllEntries().then();
         setFeedList(entriesList);
         return;
     }
 
     useEffect(() => {
-        refreshSettings().catch(() => setToastParam({toastMessage: "Refresh error", showToast: true}));
+        refreshFeeds().catch(() => setToastParam({toastMessage: "Refresh error", showToast: true}));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -44,7 +44,7 @@ export default function FeedList({setToastParam} : any) {
             <div className="d-flex flex-column justify-content-center gap-3 px-1 mt-3">
                 {
                     feedList.map(currentEntry => (
-                        FeedEntry(currentEntry, refreshFeedList, setToastParam)
+                        FeedEntry(currentEntry, refreshFeeds, setToastParam)
                         )
                     )
                 }

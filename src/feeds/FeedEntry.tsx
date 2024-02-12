@@ -9,18 +9,18 @@ import ToastProps from "../types/toast-props";
 import SanitizedMarkup from "../common/SanitizedMarkup";
 
 /** Feed element entry */
-export default function FeedEntry(currentEntry: FeedEntryProps, refreshSettings : () => void, setToastParam: ((p: ToastProps) => void)) {
+export default function FeedEntry(currentEntry: FeedEntryProps, refreshFeeds : () => void, setToastParam: ((p: ToastProps) => void)) {
 
     function deleteEntryAndRefresh(settingToDelete: FeedEntryProps) {
         deleteEntry(settingToDelete).catch(() => setToastParam({toastMessage: "Delete error", showToast: true}));
-        refreshSettings();
+        refreshFeeds();
         return;
     }
 
     function saveAsNote(entryToSave: FeedEntryProps) {
         createOrUpdateNote({id: "", title : entryToSave.title, content : entryToSave.url})
             .catch(() => setToastParam({toastMessage: "Creation error", showToast: true}));
-        refreshSettings();
+        refreshFeeds();
         return;
     }
 
