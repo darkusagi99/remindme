@@ -1,8 +1,7 @@
 import {getDocs, collection, addDoc, deleteDoc, doc, updateDoc} from "firebase/firestore";
 import {auth, db} from "./firebase";
 import FeedProps from "../types/feed-props";
-import NoteProps from "../types/note-props";
-import {addInCache, getInCache, removeFromCache, saveInCache} from "./CacheService";
+import {addInCache, getInCache, loadFromCache, removeFromCache, saveInCache} from "./CacheService";
 
 const collection_name = "feed-settings";
 const collection_name_local = collection_name + "-";
@@ -14,7 +13,7 @@ async function getUserCollection() {
 
 export const findAllSettings = async () => {
     let res: FeedProps[];
-    const localCache = loadFromCache();
+    const localCache = loadFromCache(collection_name_local);
 
     // No local cache -> Check Cloud
     if (localCache.length === 0) {
@@ -44,22 +43,6 @@ async function loadFromCloud() {
 
 }
 
-function loadFromCache() {
-    console.log("Load settings from Cache")
-    const res: FeedProps[] = []
-
-    for(let i = 0; i < localStorage.length; i++) {
-        let currentKey = localStorage.key(i);
-        if (currentKey != null && currentKey.startsWith(collection_name_local)) {
-            let tmpItem = localStorage.getItem(currentKey);
-            if (tmpItem != null) {
-                res.push(JSON.parse(tmpItem));
-            }
-        }
-    }
-
-    return res;
-}
 
 export const findAllSettingsRef = async () => {
     const userCollection = await getUserCollection();

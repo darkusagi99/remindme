@@ -1,10 +1,8 @@
 import { getDocs, collection, addDoc, deleteDoc, doc } from "firebase/firestore";
 import {auth, db} from "./firebase";
 import FeedEntryProps from "../types/feed-entry-props";
-import {findAllSettingsRef, updateLastupdateSetting} from "./FeedSettingService";
-import {addInCache, removeFromCache, saveInCache} from "./CacheService";
-import NoteProps from "../types/note-props";
-import FeedProps from "../types/feed-props";
+import {findAllSettings, findAllSettingsRef, updateLastupdateSetting} from "./FeedSettingService";
+import {addInCache, loadFromCache, removeFromCache, saveInCache} from "./CacheService";
 
 
 const collection_name = "feed-entry";
@@ -17,7 +15,7 @@ async function getUserCollection() {
 
 export const findAllEntries = async () => {
     let res: FeedEntryProps[];
-    const localCache = loadFromCache();
+    const localCache = loadFromCache(collection_name_local);
 
     // No local cache -> Check Cloud
     if (localCache.length === 0) {
@@ -48,29 +46,6 @@ async function loadFromCloud() {
 }
 
 
-function loadFromCache() {
-
-
-    console.log("Load from Cache - Feedentries");
-
-    const res: FeedEntryProps[] = []
-
-    for(let i = 0; i < localStorage.length; i++) {
-        let currentKey = localStorage.key(i);
-        if (currentKey != null && currentKey.startsWith(collection_name_local)) {
-            let tmpItem = localStorage.getItem(currentKey);
-            if (tmpItem != null) {
-                res.push(JSON.parse(tmpItem));
-            }
-        }
-    }
-
-
-    console.log("Load from Cache - Feedentries -- " + res.length);
-
-    return res;
-}
-
 export const addEntry = async (newNote : FeedEntryProps) => {
     const userCollection = await getUserCollection();
     await addDoc(collection(db, userCollection), newNote).then(
@@ -95,7 +70,7 @@ export const updateAllFeeds = async () => {
     // Update all Feeds function
 
     // Load all feeds
-    const doc_refs = await findAllSettingsRef();
+    const doc_refs = await findAllSettings();
     const corsProxy : string = 'https://corsproxy.io/?'
     let lastUpdateDate : Date;
     let dateZero : Date = new Date(0);
@@ -106,10 +81,10 @@ export const updateAllFeeds = async () => {
     // For each, get feed entry
     doc_refs.forEach(currEntry => {
 
-        let feedUrl = corsProxy + currEntry.data().url;
+        let feedUrl = corsProxy + currEntry.url;
 
         // Init Date and ID Vars
-        lastUpdateDate = new Date(currEntry.data().lastUpdate);
+        lastUpdateDate = new Date(currEntry.lastUpdate);
         maxPubDate = new Date(0);
         let currentFeedSettingId = currEntry.id;
 
@@ -155,9 +130,13 @@ export const updateAllFeeds = async () => {
                                 maxPubDate = extractedEntry.publicationDate;
                             }
 
+                            console.log("Add entry");
                             // Save element
                             addEntry(extractedEntry);
 
+                        } else {
+
+                            console.log("Skip entry");
                         }
                     }
                 )
