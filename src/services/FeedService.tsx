@@ -1,7 +1,9 @@
 import { getDocs, collection, addDoc, deleteDoc, doc } from "firebase/firestore";
 import {auth, db} from "./firebase";
 import FeedEntryProps from "../types/feed-entry-props";
-import {findAllSettingsRef} from "./FeedSettingService";
+import {findAllSettingsRef, updateLastupdateSetting} from "./FeedSettingService";
+import {Simulate} from "react-dom/test-utils";
+
 
 const collection_name = "feed-entry";
 
@@ -26,7 +28,7 @@ export const findAllEntries = async () => {
 export const addEntry = async (newNote : FeedEntryProps) => {
     const userCollection = await getUserCollection();
     //const defaultDate = new Date("1900-01-01");
-    await addDoc(collection(db, userCollection), {title: newNote.title});
+    await addDoc(collection(db, userCollection), newNote);
     return;
 }
 
@@ -41,6 +43,9 @@ export const updateAllFeeds = async () => {
     // Load all feeds
     const doc_refs = await findAllSettingsRef();
     const corsProxy : string = 'https://corsproxy.io/?'
+    let lastUpdateDate : Date;
+    let dateZero : Date = new Date(0);
+    let maxPubDate : Date;
 
     //let parser = new RSSParser();
 
@@ -48,6 +53,13 @@ export const updateAllFeeds = async () => {
     doc_refs.forEach(currEntry => {
 
         let feedUrl = corsProxy + currEntry.data().url;
+
+        // Init Date and ID Vars
+        lastUpdateDate = new Date(currEntry.data().lastUpdate);
+        maxPubDate = new Date(0);
+        let currentFeedSettingId = currEntry.id;
+
+        console.log(currentFeedSettingId + " -- " + lastUpdateDate);
 
         // Get feed entries
         fetch(feedUrl, {mode:'cors'
@@ -63,66 +75,113 @@ export const updateAllFeeds = async () => {
             )
             // Collect XML elements from feed
             .then((xmlDocument) => {
-                    let returnList;
                     let returnListStd = xmlDocument.getElementsByTagName("item");
                     let returnListEntry = xmlDocument.getElementsByTagName("entry");
 
-                    returnList = Array.from(returnListStd);
-                    returnList.concat(Array.from(returnListEntry));
-                    return returnList;
+                    if (returnListStd.length === 0) {
+                        return Array.from(returnListEntry);
+                    } else {
+                        return Array.from(returnListStd);
+
+                    }
                 }
             )
             // Loop on entries
             .then((feedEntries) =>
                 feedEntries.forEach(
-                    currEntry =>
-                        createEntryFromElement(currEntry)
+                    currEntry => {
+                        // Extract element
+                        let extractedEntry = createEntryFromElement(currEntry);
+
+                        // Check element Date
+                        if (extractedEntry.publicationDate === dateZero || extractedEntry.publicationDate > lastUpdateDate) {
+                            // Element to keep, else should be skipped
+                            // Update last update date
+                            if (extractedEntry.publicationDate > maxPubDate) {
+                                maxPubDate = extractedEntry.publicationDate;
+                            }
+
+                            // Save element
+                            addEntry(extractedEntry);
+
+                        }
+                    }
                 )
-            );
-            //.then(data => console.log(data));
+            ).then(() => {
+                // Update feed date if necessary
+                if (lastUpdateDate < maxPubDate) {
+                    updateLastupdateSetting(currentFeedSettingId, maxPubDate);
+                }
+            }
+        );
 
-        // Loop inside Feed entries and create new entries
-
-        // Update entry in DB
-
-        // If field updated proprely, update last update date
 
     })
 
 }
 
 function getFirstTagContent(element : Element, tag : string) : string {
-    let tagList = element.getElementsByTagName(tag);
-    if (tagList.length > 0) {
-        if (tagList.item(0) != null) {
-            return tagList.item(0)!.innerHTML;
+    let searchedTag = element.querySelector(tag); //element.getElementsByTagName(tag);
+    if (searchedTag != null) {
+            return searchedTag.textContent ?? "";
+    }
+    // If nothing found - return empty element
+    return "";
+}
+
+function getFirstTagArgument(element : Element, tag : string, arg : string) : string {
+    let searchedTag = element.querySelector(tag); //element.getElementsByTagName(tag);
+    if (searchedTag != null) {
+        let attrElement = searchedTag.attributes.getNamedItem(arg);
+        if (attrElement != null) {
+            return attrElement.value;
         }
     }
     // If nothing found - return empty element
     return "";
 }
 
-export const createEntryFromElement = (element : Element) => {
+export const createEntryFromElement = (element : Element) : FeedEntryProps => {
 
-        let tmpId = getFirstTagContent(element, "link");
-        let tmpUrl = getFirstTagContent(element, "link");
-        let tmpTitle = getFirstTagContent(element, "title");
-        let tmppubDate = getFirstTagContent(element, "pubDate");
-        let tmpDescription = getFirstTagContent(element, "description");
+    // Extract ID and URL
+    let tmpUrl = getFirstTagContent(element, "link");
+    if (tmpUrl === "") {
+        tmpUrl = getFirstTagArgument(element, "link", "href");
+    }
 
-        let tmpDescriptionBis = getFirstTagContent(element, "description");
-        let tmpImage = getFirstTagContent(element, "enclosure");
+    // Extract title
+    let tmpTitle = getFirstTagContent(element, "title");
 
-        let feedEntry : FeedEntryProps = {
-        id : tmpId,
+    // Extract Date
+    let tmpPubDate = new Date(getFirstTagContent(element, "pubDate"));
+    if (isNaN(tmpPubDate.getTime())) {
+        tmpPubDate = new Date(getFirstTagContent(element, "published"));
+        if (isNaN(tmpPubDate.getTime())) {
+            tmpPubDate = new Date(0);
+        }
+    }
+
+    // GetDescription content
+    let tmpDescription = getFirstTagContent(element, "description");
+    if(tmpDescription === "") {
+        tmpDescription = getFirstTagContent(element, "content"); // TODO - Nettoyer les CDATA
+    }
+
+    // Get image
+    let tmpImage = getFirstTagArgument(element, "enclosure", "url");
+    if (tmpImage === "") {
+        tmpImage = getFirstTagArgument(element, "content", "url");
+    }
+
+    // Return extracted entryProps
+    return {
+        id : tmpUrl,
         url : tmpUrl,
         title : tmpTitle,
-        publicationDate : new Date(),
-        description : tmpDescription + tmpDescriptionBis,
+        publicationDate : tmpPubDate,
+        description : tmpDescription,
         imageLink : tmpImage
-        //imageFile :
-        }
+    };
 
-        console.log(feedEntry);
 
 }
