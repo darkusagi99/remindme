@@ -6,6 +6,7 @@ import FeedEntryProps from "../types/feed-entry-props";
 import {createOrUpdateNote} from "../services/NoteServices";
 import {DeleteIcon, LinkIcon, SaveIcon} from "../common/Icons";
 import ToastProps from "../types/toast-props";
+import SanitizedMarkup from "../common/SanitizedMarkup";
 
 /** Feed element entry */
 export default function FeedEntry(currentEntry: FeedEntryProps, refreshSettings : () => void, setToastParam: ((p: ToastProps) => void)) {
@@ -28,12 +29,23 @@ export default function FeedEntry(currentEntry: FeedEntryProps, refreshSettings 
         return;
     }
 
+    function showImage(currentEntry: FeedEntryProps) {
+        if (currentEntry.imageLink === "") {
+            return "";
+        } else {
+            return <img src={currentEntry.imageLink} alt={currentEntry.description}/>;
+        }
+    }
+
     /** Component display */
     return (
-            <div className="card" key={currentEntry.id}>
+        <div className="card" key={currentEntry.id}>
                 <div className="card-body">
                     <h5 className="card-title">{currentEntry.title}</h5>
-                    <p className="card-text">{currentEntry.description}</p>
+                    <p className="card-text">
+                        <SanitizedMarkup dirtyHtml={currentEntry.description} />
+                    </p>
+                    {showImage(currentEntry)}
                 </div>
                 <div className="card-footer">
                     <div className="d-flex  bd-highlight justify-content-between">

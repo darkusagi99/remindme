@@ -2,7 +2,6 @@ import { getDocs, collection, addDoc, deleteDoc, doc } from "firebase/firestore"
 import {auth, db} from "./firebase";
 import FeedEntryProps from "../types/feed-entry-props";
 import {findAllSettingsRef, updateLastupdateSetting} from "./FeedSettingService";
-import {Simulate} from "react-dom/test-utils";
 
 
 const collection_name = "feed-entry";
@@ -164,7 +163,7 @@ export const createEntryFromElement = (element : Element) : FeedEntryProps => {
     // GetDescription content
     let tmpDescription = getFirstTagContent(element, "description");
     if(tmpDescription === "") {
-        tmpDescription = getFirstTagContent(element, "content"); // TODO - Nettoyer les CDATA
+        tmpDescription = getFirstTagContent(element, "content");
     }
 
     // Get image
