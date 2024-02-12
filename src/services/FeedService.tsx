@@ -1,7 +1,7 @@
-import { getDocs, collection, addDoc, deleteDoc, doc } from "firebase/firestore";
+import {getDocs, collection, deleteDoc, doc, addDoc} from "firebase/firestore";
 import {auth, db} from "./firebase";
 import FeedEntryProps from "../types/feed-entry-props";
-import {findAllSettings, findAllSettingsRef, updateLastupdateSetting} from "./FeedSettingService";
+import {findAllSettings, updateLastupdateSetting} from "./FeedSettingService";
 import {addInCache, loadFromCache, removeFromCache, saveInCache} from "./CacheService";
 
 
@@ -25,6 +25,8 @@ export const findAllEntries = async () => {
         // Local cache -> serve as return.
         res =  localCache;
     }
+
+    console.log(res);
 
     return res;
 }
@@ -72,11 +74,7 @@ export const updateAllFeeds = async () => {
     // Load all feeds
     const doc_refs = await findAllSettings();
     const corsProxy : string = 'https://corsproxy.io/?'
-    let lastUpdateDate : Date;
     let dateZero : Date = new Date(0);
-    let maxPubDate : Date;
-
-    //let parser = new RSSParser();
 
     // For each, get feed entry
     doc_refs.forEach(currEntry => {
@@ -84,8 +82,8 @@ export const updateAllFeeds = async () => {
         let feedUrl = corsProxy + currEntry.url;
 
         // Init Date and ID Vars
-        lastUpdateDate = new Date(currEntry.lastUpdate);
-        maxPubDate = new Date(0);
+        let lastUpdateDate = new Date(currEntry.lastUpdate);
+        let maxPubDate = new Date(0);
         let currentFeedSettingId = currEntry.id;
 
         console.log(currentFeedSettingId + " -- " + lastUpdateDate);
@@ -97,9 +95,7 @@ export const updateAllFeeds = async () => {
             .then(response => response.text())
             // Transform body to XML Document object
             .then(data => {let parser = new DOMParser()
-                    let xmlDoc = parser.parseFromString(data, 'text/xml')
-                    console.log(xmlDoc)
-                    return xmlDoc;
+                    return parser.parseFromString(data, 'text/xml');
             }
             )
             // Collect XML elements from feed
@@ -116,33 +112,32 @@ export const updateAllFeeds = async () => {
                 }
             )
             // Loop on entries
-            .then((feedEntries) =>
-                feedEntries.forEach(
-                    currEntry => {
-                        // Extract element
-                        let extractedEntry = createEntryFromElement(currEntry);
+            .then((feedEntries) => {
+                    feedEntries.forEach(
+                        currEntry => {
+                            // Extract element
+                            let extractedEntry = createEntryFromElement(currEntry);
 
-                        // Check element Date
-                        if (extractedEntry.publicationDate === dateZero || extractedEntry.publicationDate > lastUpdateDate) {
-                            // Element to keep, else should be skipped
-                            // Update last update date
-                            if (extractedEntry.publicationDate > maxPubDate) {
-                                maxPubDate = extractedEntry.publicationDate;
+                            // Check element Date
+                            if (extractedEntry.publicationDate === dateZero || extractedEntry.publicationDate > lastUpdateDate) {
+                                // Element to keep, else should be skipped
+                                // Update last update date
+
+                                if (extractedEntry.publicationDate > maxPubDate) {
+                                    maxPubDate = extractedEntry.publicationDate;
+                                }
+
+                                // Save element
+                                addEntry(extractedEntry);
+
                             }
-
-                            console.log("Add entry");
-                            // Save element
-                            addEntry(extractedEntry);
-
-                        } else {
-
-                            console.log("Skip entry");
                         }
-                    }
-                )
+                    )
+                }
             ).then(() => {
                 // Update feed date if necessary
                 if (lastUpdateDate < maxPubDate) {
+
                     updateLastupdateSetting(currentFeedSettingId, maxPubDate);
                 }
             }
