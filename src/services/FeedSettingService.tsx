@@ -66,7 +66,7 @@ export const updateLastupdateSetting = async (settingId : string, newDate : Date
     await updateDoc(doc(db, userCollection, settingId), {lastUpdate: newDate}).then(
         () => {
             let tmpVal = JSON.parse(getInCache(collection_name_local + settingId));
-            addInCache(collection_name_local + settingId, {id : settingId, url: tmpVal.url, newDate});
+            addInCache(collection_name_local + settingId, {id : settingId, url: tmpVal.url, lastUpdate: newDate});
         }
     );
 }

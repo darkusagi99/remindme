@@ -1,5 +1,3 @@
-import FeedEntryProps from "../types/feed-entry-props";
-
 export function saveInCache(noteList : any, collection_name_local : string) {
 
     console.log("Save in cache");
