@@ -44,12 +44,7 @@ async function loadFromCloud() {
 }
 
 
-export const findAllSettingsRef = async () => {
-    const userCollection = await getUserCollection();
-    return getDocs(collection(db, userCollection))
-}
-
-export const addSetting = async (newUrl : string) => {
+export async function addSetting(newUrl : string)  {
 
     const defaultDate = new Date("1900-01-01");
     const userCollection = await getUserCollection();

@@ -14,8 +14,11 @@ export default function FeedModal(showModal: boolean, setShowModal: (value: bool
 
     function addNewSetting() {
         addSetting(newFeedUrl)
-            .catch(() => setToastParam({toastMessage: "Creation error", showToast: true}));
-        refreshSettings();
+            .then(() => refreshSettings())
+            .catch(() => {
+                setToastParam({toastMessage: "Creation error", showToast: true})
+            });
+
         setShowModal(false);
         setNewFeedUrl("");
         return;

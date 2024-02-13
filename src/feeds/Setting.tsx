@@ -11,8 +11,9 @@ import ToastProps from "../types/toast-props";
 export default function Settings(currentSetting : FeedProps, refreshSettings : () => void, setToastParam: ((p: ToastProps) => void)) {
 
     function deleteSettingAndRefresh(settingToDelete: FeedProps) {
-        deleteSetting(settingToDelete).catch(() => setToastParam({toastMessage: "Delete error", showToast: true}));
-        refreshSettings();
+        deleteSetting(settingToDelete)
+            .then(() => refreshSettings())
+            .catch(() => setToastParam({toastMessage: "Delete error", showToast: true}));
         return;
     }
 
