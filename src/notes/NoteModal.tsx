@@ -31,8 +31,8 @@ export default function NoteModal(displayModal: boolean,
     function saveNewNote() {
         console.log("Save Note");
         console.log(modalInfo);
-        createOrUpdateNote(modalInfo).catch(() => setToastParam({toastMessage: "Creation error", showToast: true}));
-        refreshNotes();
+        createOrUpdateNote(modalInfo).then(() => refreshNotes()).catch(() => setToastParam({toastMessage: "Creation error", showToast: true}));
+
         setShowModal(false);
         setModalInfo({id:"", content:"", title:""})
         return;

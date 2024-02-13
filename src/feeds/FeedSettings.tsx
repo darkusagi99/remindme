@@ -17,7 +17,9 @@ export default function FeedSettings({setToastParam} : any) {
     const handleShow = () => setShowModal(true);
 
     async function refreshSettings() {
-        setSettingList(await findAllSettings().then());
+        let settingsList = await findAllSettings().then()
+        setSettingList(settingsList);
+        return;
     }
 
     useEffect(() => {

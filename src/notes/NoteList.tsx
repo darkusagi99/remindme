@@ -18,7 +18,9 @@ export default function NoteList({setToastParam} : any) {
     const handleShow = () => setShowModal(true);
 
     async function refreshNotes() {
-        setNoteList(await findAllNotes());
+        let noteList = await findAllNotes().then()
+        setNoteList(noteList);
+        return;
     }
 
     useEffect(() => {
