@@ -12,8 +12,7 @@ import SanitizedMarkup from "../common/SanitizedMarkup";
 export default function FeedEntry(currentEntry: FeedEntryProps, refreshFeeds : () => void, setToastParam: ((p: ToastProps) => void)) {
 
     function deleteEntryAndRefresh(settingToDelete: FeedEntryProps) {
-        deleteEntry(settingToDelete).catch(() => setToastParam({toastMessage: "Delete error", showToast: true}));
-        refreshFeeds();
+        deleteEntry(settingToDelete).then(() => refreshFeeds()).catch(() => setToastParam({toastMessage: "Delete error", showToast: true}));
         return;
     }
 
